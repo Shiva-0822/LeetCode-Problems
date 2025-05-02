@@ -4,14 +4,15 @@ class Solution(object):
         :type s: str
         :rtype: int
         """
-        char_index = {}
-        max_length = 0
+        last_seen = [-1] * 128  # Fixed size for ASCII (faster than dictionary)
+        max_len = 0
         start = 0
 
-        for end in range(len(s)):
-            if s[end] in char_index and char_index[s[end]] >= start:
-                start = char_index[s[end]] + 1
-            char_index[s[end]] = end
-            max_length = max(max_length, end - start + 1)
+        for i, char in enumerate(s):
+            ascii_index = ord(char)
+            if last_seen[ascii_index] >= start:
+                start = last_seen[ascii_index] + 1
+            last_seen[ascii_index] = i
+            max_len = max(max_len, i - start + 1)
 
-        return max_length
+        return max_len
